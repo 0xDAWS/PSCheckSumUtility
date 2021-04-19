@@ -3,18 +3,30 @@
 # Provided under the CC License 
 
 param (
-[Parameter(ParameterSetName="SelectMode", Mandatory=$true)][ValidateSet("File", "Directory", "Check")][string]$Mode,
+[Parameter(ParameterSetName="SelectMode", Mandatory=$true)][ValidateSet("File", "Directory", "Check", "Compare")][string]$Mode,
 [Parameter(ParameterSetName="SelectMode", Mandatory=$true)][string]$Path,
+[ValidateSet("MD5", "SHA1", "SHA256", "SHA384", "SHA512")][string]$Algorithm,
+[string]$Hash,
 [switch]$OutFile
 )
 
 function Get-FileChecksum([string]$InFile) {
-    $FileResults = Get-FileHash -Algorithm SHA256 $InFile
+    $FileResults = Get-FileHash -Algorithm $Algorithm $InFile
     return $FileResults.Hash + "  " + $FileResults.Path
 }
 
 function Check-FileExists([string]$fn) {
     return Test-Path -Path $fn -PathType Leaf
+}
+
+# Set the Hashing Algorithm
+if ( -not $Algorithm ) {
+    $Algorithm = "SHA256"
+}
+
+# If OutFile is to be generated, then set the outfile name to match the algorithm
+if ( $OutFile ) {
+    $OutFileName = $Algorithm + "SUMS.txt"
 }
 
 if ($Mode -eq "Check") {
@@ -39,7 +51,7 @@ if ($Mode -eq "Check") {
 
         # try block will fail if file can't be found
         try {
-            $FileChecksum = (Get-FileHash -Algorithm SHA256 $PathToFile -ErrorAction stop).Hash 
+            $FileChecksum = (Get-FileHash -Algorithm $Algorithm $PathToFile -ErrorAction stop).Hash 
 
             if ( $StoredChecksum.Equals($FileChecksum) ) {
                 Write-Host -ForegroundColor Green "[ PASS ]" $PathToFile
@@ -55,11 +67,40 @@ if ($Mode -eq "Check") {
     Write-Host -ForegroundColor Green "[+] Operation Complete!" 
 }
 
+elseif ($Mode -eq "Compare") {
+
+    if ( $Hash -and $Path ) { 
+
+        if (Check-FileExists($Path)) { 
+            $FileHash = (Get-FileHash -Algorithm $Algorithm $Path).Hash
+
+            if ($Hash.Equals($FileHash)) { 
+                Write-Host -ForegroundColor Green "[ PASS ]" $Path
+            }
+
+            else {
+                Write-Host -ForegroundColor Red "[ FAIL ]" $Path
+            }
+
+            Write-Host -ForegroundColor Green "[+] Operation Complete!" 
+        }
+
+        else {
+            Write-Host -ForegroundColor Red "[-] File does not exist at this path:" $Path
+        }
+    }
+
+    else {
+        Write-Host -ForegroundColor Red "[-] To use Compare mode, both the -Hash and -Path flags must be set correctly"
+    }
+}
+
 elseif ($Mode -eq "Directory") {
     # DIRECTORY MODE HEADER
     Write-Host "=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-="
     Write-Host "Path:" $Path
     Write-Host "Mode: Directory" 
+    Write-Host "Algorithm:" $Algorithm
     Write-Host "Generate checksums file:" $OutFile
     Write-Host "=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-="
     
@@ -67,7 +108,7 @@ elseif ($Mode -eq "Directory") {
         # Check if $OutFile is set or not, if set but not provided then set path to same directory as $Path
         # If SHA256SUMS.txt already exists, remove it
         if ($OutFile) {
-            $OutFilePath = [IO.Path]::Combine($Path, "SHA256SUMS.txt")
+            $OutFilePath = [IO.Path]::Combine($Path, $OutFileName)
             if ( Check-FileExists($OutFilePath) ) { 
                 Remove-Item $OutFilePath
             }
@@ -107,6 +148,7 @@ elseif ($Mode -eq "File") {
     Write-Host "=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-="
     Write-Host "Path:" $Path
     Write-Host "Mode: File" 
+    Write-Host "Algorithm:" $Algorithm
     Write-Host "Generate checksums file:" $OutFile
     Write-Host "=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-="
 
@@ -116,7 +158,7 @@ elseif ($Mode -eq "File") {
 
         if ($OutFile) {
             $DirPath = (Get-Item $Path).Directory.FullName
-            $OutFilePath = [IO.Path]::Combine($DirPath, "SHA256SUMS.txt")
+            $OutFilePath = [IO.Path]::Combine($DirPath, $OutFileName)
 
             if ( Check-FileExists($OutFilePath) ) { 
                 Remove-Item $OutFilePath
