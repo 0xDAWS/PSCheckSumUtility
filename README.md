@@ -5,10 +5,10 @@ Powershell Checksum Utility
 | Param | Description | Required |
 | --- | --- | --- |
 | `Mode` | Sets the mode of operation | True |
-| `Path` | The path to a given file | True |
+| `Path` | The path to a given file or directory | True |
 | `Algorithm` | Sets the hashing algorithm to be used in the checksum operation (Default: SHA256) | False |
-| `Hash` | Perform the check operation on a valid checksum file | Only for Mode: Compare | 
-| `OutFile` | Boolean that when set will generate a checksum file in the same directory as -Path | False |
+| `Hash` | Specific previously known hash, which can be used in Compare mode | Only for Mode: Compare | 
+| `OutFile` | Boolean value that when set will generate a checksum file in the same directory as -Path | False |
 
 # Modes
 | Mode | Description |
@@ -45,27 +45,15 @@ d-----        19/04/2021   6:37 PM                TestDirectory
 
 ### Checksum a single file, and output to console 
 ```
-PSCheckSumUtility.ps1 -Mode File -Path C:\Test\TestDoc-1.txt
+PSCheckSum -Mode File -Path C:\Test\TestDoc-1.txt
 
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-Path: C:\Test\TestDoc-1.txt
-Mode: File
-Algorithm: SHA256
-Generate checksums file: False
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 5FCABC98978A52501FD64C1E8C38BC790D3DD09BDCED3E378161B5C20FE9CA03  C:\Test\TestDoc-1.txt
 ```
 
 ### Checksum an entire directory using the MD5 algorithm and create a checksum file
 ```
-PSCheckSumUtility.ps1 -Mode Directory -Path C:\Test\ -Algorithm MD5 -OutFile
+PSCheckSum -Mode Directory -Path C:\Test\ -Algorithm MD5 -OutFile
 
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-Path: C:\Test\
-Mode: Directory
-Algorithm: MD5
-Generate checksums file: True
-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 [-] C:\Test\TestDirectory is not a file and will not be processed, continuing checksum operation..
 4765C0B343E5431B301BC375628B4DED  C:\Test\TestDoc-1.txt
 2D00830E08511A445020D235D40931E7  C:\Test\TestDoc-2.txt
@@ -74,11 +62,8 @@ Generate checksums file: True
 
 ### Perform a check operation on a checksum file
 ```
-PSCheckSumUtility.ps1 -Mode Check -Path C:\Test\MD5SUMS.txt -Algorithm MD5
+PSCheckSum -Mode Check -Path C:\Test\MD5SUMS.txt -Algorithm MD5
 
-==================================
-Checksum File: C:\Test\MD5SUMS.txt
-==================================
 [ PASS ] C:\Test\TestDoc-1.txt
 [ PASS ] C:\Test\TestDoc-2.txt
 [ PASS ] C:\Test\TestDoc-3.txt
@@ -87,7 +72,7 @@ Checksum File: C:\Test\MD5SUMS.txt
 
 ### Perform a compare operation on a file with a known hash
 ```
-PSCheckSumUtility.ps1 -Mode Compare -Path C:\Test\TestDoc-1.txt -Algorithm MD5 -Hash 4765C0B343E5431B301BC375628B4DED
+PSCheckSum -Mode Compare -Path C:\Test\TestDoc-1.txt -Algorithm MD5 -Hash 4765C0B343E5431B301BC375628B4DED
 
 [ PASS ] C:\Test\TestDoc-1.txt
 [+] Operation Complete!
