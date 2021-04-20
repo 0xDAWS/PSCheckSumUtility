@@ -1,6 +1,13 @@
 # PSCheckSumUtility
 Powershell Checksum Utility
 
+### Sections
+- [Params](https://github.com/d4ws/PSCheckSumUtility#params)
+- [Modes](https://github.com/d4ws/PSCheckSumUtility#modes)
+- [Supported Algorithms](https://github.com/d4ws/PSCheckSumUtility#supported-algorithms)
+- [Installation](https://github.com/d4ws/PSCheckSumUtility#installation)
+- [Examples](https://github.com/d4ws/PSCheckSumUtility#examples)
+
 # Params
 | Param | Description | Required |
 | --- | --- | --- |
@@ -29,6 +36,24 @@ Algorithms:
 - `SHA512` 
 
 Note: A checksum file has no information about the algorithm used to generate its content, so if you generate a `SHA512` checksum file, you must explicitly tell the script to use the correct algorithm. The script does correctly name the generated checksum files according to the algorithm chosen, for example: `MD5` would generate a checksum file with the name `MD5SUMS.txt`.
+
+# Installation
+To install PSCheckSumUtility it must first be placed in the PSModulePath, after which it can be imported into powershell with the Import-Module cmdlet
+
+### Manual Installation
+Some users may wish to install the module manually, to do this you will need to create a PSCheckSumUtility directory (name must match exactly) and the place the PSCheckSumUtility.psm1 file inside the directory. The location of this directory is decided by if you wish install the module for a single user or all users on the machine. The paths are listed below.
+
+##### Single User
+```$home\Documents\WindowsPowerShell\Modules\PSCheckSumUtility\PSCheckSumUtility.psm1```
+
+##### All Users
+```$Env:ProgramFiles\WindowsPowerShell\Modules\PSCheckSumUtility\PSCheckSumUtility.psm1```
+
+If you are struggling to get the module installed please read through this [article](https://docs.microsoft.com/en-us/powershell/scripting/developer/module/installing-a-powershell-module?view=powershell-7.1) from Microsoft on installing PowerShell modules, before opening an issue.
+
+### After Installation
+Simply import the module using Import-Module and you are ready to go!
+`Import-Module PSCheckSumUtility`
 
 # Examples
 Here is a test directory structure we will use in the following examples:
