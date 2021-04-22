@@ -1,4 +1,4 @@
-# PSCheckSumUtilityInstallScript.ps1 
+# PSCheckSumUtility.psm1
 # Written by 0xDAWS (https://github.com/0xDAWS)
 # Version: 0.1
 # Provided under the MIT License
