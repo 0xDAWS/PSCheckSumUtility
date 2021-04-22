@@ -1,7 +1,7 @@
-# PSCheckSumUtility.psm1 
-# Written by d4ws (https://github.com/d4ws)
+# PSCheckSumUtilityInstallScript.ps1 
+# Written by 0xDAWS (https://github.com/0xDAWS)
 # Version: 0.1
-# Provided under the CC License 
+# Provided under the MIT License
 
 <#
  .Synopsis
