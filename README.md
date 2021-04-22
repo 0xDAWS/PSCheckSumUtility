@@ -2,11 +2,11 @@
 Powershell Checksum Utility
 
 ### Sections
-- [Params](https://github.com/d4ws/PSCheckSumUtility#params)
-- [Modes](https://github.com/d4ws/PSCheckSumUtility#modes)
-- [Supported Algorithms](https://github.com/d4ws/PSCheckSumUtility#supported-algorithms)
-- [Installation](https://github.com/d4ws/PSCheckSumUtility#installation)
-- [Examples](https://github.com/d4ws/PSCheckSumUtility#examples)
+- [Params](https://github.com/0xDAWS/PSCheckSumUtility#params)
+- [Modes](https://github.com/0xDAWS/PSCheckSumUtility#modes)
+- [Supported Algorithms](https://github.com/0xDAWS/PSCheckSumUtility#supported-algorithms)
+- [Installation](https://github.com/0xDAWS/PSCheckSumUtility#installation)
+- [Examples](https://github.com/0xDAWS/PSCheckSumUtility#examples)
 
 # Params
 | Param | Description | Required |
