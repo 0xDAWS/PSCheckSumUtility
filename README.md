@@ -1,10 +1,11 @@
 # PSCheckSumUtility
-Powershell Checksum Utility
+A PowerShell module to perform cryptographic checksum operations
 
 ### Sections
 - [Params](https://github.com/0xDAWS/PSCheckSumUtility#params)
 - [Modes](https://github.com/0xDAWS/PSCheckSumUtility#modes)
 - [Supported Algorithms](https://github.com/0xDAWS/PSCheckSumUtility#supported-algorithms)
+- [Verify Installation Files (Optional)](https://github.com/0xDAWS/PSCheckSumUtility/blob/main/README.md#verify-installation-files-optional)
 - [Installation](https://github.com/0xDAWS/PSCheckSumUtility#installation)
     - [Manual Installation](https://github.com/0xDAWS/PSCheckSumUtility#manual-installation)
     - [Import-Module](https://github.com/0xDAWS/PSCheckSumUtility#importing-the-module)
