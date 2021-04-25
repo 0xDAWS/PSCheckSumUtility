@@ -38,29 +38,31 @@ Algorithms:
 - `SHA384`
 - `SHA512` 
 
-Note: A checksum file has no information about the algorithm used to generate its content, so if you generate a `SHA512` checksum file, you must explicitly tell the script to use the correct algorithm. The script does correctly name the generated checksum files according to the algorithm chosen, for example: `MD5` would generate a checksum file with the name `MD5SUMS.txt`.
+Note: A checksum file has no information about the algorithm used to generate its content, so if you generate a `SHA512` checksum file, you must explicitly tell the script to use the correct algorithm. 
+
+The script will correctly name the generated checksum files according to the algorithm chosen, for example: `MD5` would generate a checksum file with the name `MD5SUMS.txt`. Which makes it easy to identify the algorithm used to create the checksum, but does not automatically set the algorithm for `Check` or `Compare` modes.
 
 # Verify installation files (Optional)
 For added security I create a checksum for each release, which can be verified with the PowerShell `Get-FileHash` command, this will ensure the script is unaltered and safe to execute on your machine/s without the need to run the script itself to check its checksums.
 
-In a powershell prompt enter the following command (replacing with the correct paths for your machine)
+In a powershell prompt enter the following command (replacing with the correct paths for where the module was downloaded to your machine)
 
 ```
-(Get-FileHash -Algorithm SHA256 $home\Downloads\PSCSU*\PSCheckSumUtility.psm1).hash -eq (Get-Content -Path $home\Downloads\PSCSU*\SHA256SUM.txt)
+(Get-FileHash -Algorithm SHA256 PSCheckSumUtility.psm1).hash -eq (Get-Content -Path SHA256SUM.txt)
 ```
 This will return a boolean value of `True` if the hash matches, or `False` if it has been tampered or corrupted in some way. This is essentially a simplified version of what PSCheckSumUtility does behind the scenes anyway but it's nice to be able to verify it with Microsofts own tools for peace of mind.
 
-You can also find a signature file in each release, for those who value absolute security and have access to GPG you can verify the SHA256SUM.txt file as being genuine using my public [signing key](https://github.com/0xDAWS/Public-Keys/blob/main/0xDAWS.SigningKey.Public.asc) and the following command after importing the key into your keyring. 
+You can also find a signature file in each release, for those who value absolute security and have access to GPG you can verify the SHA256SUM.txt file as being genuine using my [signing key](https://github.com/0xDAWS/Public-Keys/blob/main/0xDAWS.SigningKey.Public.asc) and the GPG --verify command (after importing the key into your keyring). 
 
 ```
-gpg --verify $home\Downloads\PSCSU*\SHA256SUM.txt.sig $home\Downloads\PSCSU*\SHA256SUM.txt
+gpg --verify SHA256SUM.txt.sig SHA256SUM.txt
 ```
 
 # Installation
-To install PSCheckSumUtility it must first be adding it to the PSModulePath, after which it can be imported into powershell with the Import-Module cmdlet
+To install PSCheckSumUtility as a module it must first be added to the PSModulePath on your machine, after which it can be imported into powershell with the Import-Module command.
 
 ### Manual Installation
-Some users may wish to install the module manually, to do this you will need to create a PSCheckSumUtility directory (name must match exactly) and the place the PSCheckSumUtility.psm1 file inside the directory. The location of this directory is decided by if you wish install the module for a single user or all users on the machine. The paths are listed below.
+To install the module manually, you will need to create a `PSCheckSumUtility` directory (the name must match exactly) and then place the PSCheckSumUtility.psm1 file inside the directory. The location of this directory is decided by if you wish install the module for a single user or all users on the machine. The paths are listed below.
 
 ##### Single User
 ```$home\Documents\WindowsPowerShell\Modules\PSCheckSumUtility\PSCheckSumUtility.psm1```
@@ -71,8 +73,10 @@ Some users may wish to install the module manually, to do this you will need to 
 If you cannot import the module after adding it to PSModulePath then please read through this [article](https://docs.microsoft.com/en-us/powershell/scripting/developer/module/installing-a-powershell-module?view=powershell-7.1) from Microsoft on installing PowerShell modules, before opening an issue.
 
 ### Importing the module
-Simply import the module using Import-Module and you are ready to go!
-```Import-Module PSCheckSumUtility```
+Once the module has been added to the PSModulePath, simply use Import-Module and you are ready to go!
+```
+Import-Module PSCheckSumUtility
+```
 
 # Examples
 Here is the example directory structure we will use in the following examples:
@@ -86,7 +90,9 @@ d-----        19/04/2021   6:37 PM                TestDirectory
 -a----        19/04/2021   6:37 PM             24 TestDoc-2.txt
 -a----        19/04/2021   6:37 PM             36 TestDoc-3.txt
 ```
-You can see it contains a directory and three .txt files. Directories are not able to be checksums by PSCheckSumUtility, so the script should recognise it as a directory and continue on without any problem. Currently there is no way to use PSCheckSumUtility to recursively checksum a directories subdirectories, but should be added in a future release.
+You can see it contains a directory and three .txt files. Directories are not able to be hashed by PSCheckSumUtility, so the script should recognise it as a directory and continue on without any problem. 
+
+Note: Currently there is no way to use PSCheckSumUtility to recursively checksum a directories subdirectories, but should be added in a future release.
 
 ### Checksum a single file, and output to console 
 ```
