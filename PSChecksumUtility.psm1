@@ -88,6 +88,8 @@ function PSCheckSum {
                 }
                 else {
                     Write-Host -ForegroundColor Red "[ FAIL ]" $PathToFile
+                    Write-Verbose "Expected: $StoredChecksum"
+                    Write-Verbose "Returned: $FileChecksum"
                 }
             }
             catch {
@@ -98,11 +100,12 @@ function PSCheckSum {
     }
 
     elseif ($Mode -eq "Compare") {
+        $Hash = $Hash.Trim().ToUpper()
         # COMPARE MODE VERBOSE HEADER
         Write-Verbose "Path: $Path"
         Write-Verbose "Hash: $Hash"
-        if ( $Hash -and $Path ) { 
 
+        if ( $Hash -and $Path ) { 
             if (Get-FileExists($Path)) { 
                 $FileHash = (Get-FileHash -Algorithm $Algorithm $Path).Hash
                 if ($Hash.Equals($FileHash)) { 
@@ -110,6 +113,8 @@ function PSCheckSum {
                 }
                 else {
                     Write-Host -ForegroundColor Red "[ FAIL ]" $Path
+                    Write-Verbose "Expected: $Hash"
+                    Write-Verbose "Returned: $FileHash"
                 }
                 Write-Host -ForegroundColor Green "[+] Operation Complete!" 
             }
